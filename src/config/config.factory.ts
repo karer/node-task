@@ -3,6 +3,7 @@ export const configFactory = () => {
 
   return {
     env: env.NODE_ENV,
+    app: { key: env.APP_KEY },
     port: parseInt(env.PORT, 10),
     database: {
       host: env.DB_HOST,
