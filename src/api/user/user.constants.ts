@@ -1,4 +1,4 @@
-import { User } from './user.interface';
+import { User } from './interfaces/user.interface';
 
 export const USER_MOCKS: { [key: string]: User } = {
   '1': {

@@ -1,6 +1,6 @@
 import { Controller, Post, Request, ForbiddenException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '../user/user.interface';
+import { User } from '../user/interfaces/user.interface';
 
 @Controller('auth')
 export class AuthController {
