@@ -16,4 +16,8 @@ export class ProductService {
   findOne(conditions: FilterQuery<Product> = {}): Promise<Product> {
     return this.productModel.findOne(conditions).exec();
   }
+
+  findById(id: string): Promise<Product> {
+    return this.productModel.findById(id).exec();
+  }
 }

@@ -5,34 +5,36 @@ import {
   Param,
   NotFoundException,
   Post,
+  Body,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ReqUser } from '../user/user.decorator';
 import { User } from '../user/interfaces/user.interface';
 import { CartService } from './cart.service';
 import { Cart } from './interfaces/cart.interface';
+import { AddCartProductDto } from './dto/cart-products.add.dto';
+import { FindOneParams } from '../../services/database/database.params';
+import { ProductService } from '../product/product.service';
+import { Product } from '../product/interfaces/product.interface';
 
 @UseGuards(AuthGuard())
 @Controller('cart')
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(
+    private readonly cartService: CartService,
+    private readonly productService: ProductService,
+  ) {}
 
   @Get()
   async getCarts(@ReqUser() user: User) {
-    const carts: Cart[] = await this.cartService.findForUser(user, {
-      fields: '_id',
-    });
+    const carts: Cart[] = await this.getCartsForUser(user);
 
     return { carts };
   }
 
   @Get(':id')
-  async getCart(@Param('id') id: string, @ReqUser() user: User) {
-    const cart: Cart = await this.cartService.findByIdForUser(user, id);
-
-    if (!cart) {
-      throw new NotFoundException();
-    }
+  async getCart(@Param() params: FindOneParams, @ReqUser() user: User) {
+    const cart: Cart = await this.getCartForUser(params.id, user);
 
     return { cart };
   }
@@ -42,5 +44,47 @@ export class CartController {
     const cart: Cart = await this.cartService.createForUser(user);
 
     return { cart };
+  }
+
+  @Post(':id/products')
+  async addProductToCart(
+    @Param() params: FindOneParams,
+    @Body() dto: AddCartProductDto,
+    @ReqUser() user: User,
+  ) {
+    const [cart, product]: [Cart, Product] = await Promise.all([
+      this.getCartForUser(params.id, user),
+      this.productService.findById(dto.productId),
+    ]);
+
+    if (!product) {
+      throw new NotFoundException('Product not found.');
+    }
+
+    const newCart: Cart = await this.cartService.addProducts(
+      cart,
+      product,
+      dto.quantity,
+    );
+
+    return { cart: newCart };
+  }
+
+  private async getCartsForUser(user: User): Promise<Cart[]> {
+    const carts: Cart[] = await this.cartService.findForUser(user, {
+      fields: '_id',
+    });
+
+    return carts;
+  }
+
+  private async getCartForUser(id: string, user: User): Promise<Cart> {
+    const cart: Cart = await this.cartService.findByIdForUser(user, id);
+
+    if (!cart) {
+      throw new NotFoundException('Cart not found.');
+    }
+
+    return cart;
   }
 }

@@ -3,10 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery } from 'mongoose';
 import { Cart } from './interfaces/cart.interface';
 import { User } from '../user/interfaces/user.interface';
+import { CartEntry } from './interfaces/cart-entry.interface';
+import { Product } from '../product/interfaces/product.interface';
 
 @Injectable()
 export class CartService {
-  constructor(@InjectModel('Cart') private readonly cartModel: Model<Cart>) {}
+  constructor(
+    @InjectModel('Cart') private readonly cartModel: Model<Cart>,
+    @InjectModel('CartEntry') private readonly cartEntryModel: Model<CartEntry>,
+  ) {}
 
   find(conditions: FilterQuery<Cart> = {}): Promise<Cart[]> {
     return this.cartModel.find(conditions).exec();
@@ -38,5 +43,28 @@ export class CartService {
 
   createForUser(user: User, fields: Partial<Cart> = {}): Promise<Cart> {
     return this.create({ ...fields, userId: user.id });
+  }
+
+  async addProducts(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
+    const existingEntry = cart.content.find(
+      (entry: CartEntry) => entry.product === product._id,
+    );
+
+    if (existingEntry) {
+      existingEntry.quantity += quantity;
+
+      cart.markModified('content');
+    } else {
+      const cartEntry: CartEntry = new this.cartEntryModel({
+        product: product._id,
+        quantity,
+      });
+
+      cart.content.push(cartEntry);
+    }
+
+    await cart.save();
+
+    return cart;
   }
 }
