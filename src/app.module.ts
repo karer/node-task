@@ -4,10 +4,12 @@ import { configFactory } from './config/config.factory';
 import { AuthModule } from './api/auth/auth.module';
 import { UserModule } from './api/user/user.module';
 import { CartModule } from './api/cart/cart.module';
+import { DatabaseModule } from './services/database/database.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configFactory] }),
+    DatabaseModule,
     AuthModule,
     UserModule,
     CartModule,
