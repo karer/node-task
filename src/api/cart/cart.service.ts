@@ -67,4 +67,15 @@ export class CartService {
 
     return cart;
   }
+
+  async removeProductById(cart: Cart, productId: string): Promise<Cart> {
+    cart.content = cart.content.filter(
+      (entry: CartEntry) => entry.product !== productId,
+    );
+    cart.markModified('content');
+
+    await cart.save();
+
+    return cart;
+  }
 }

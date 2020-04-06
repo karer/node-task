@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Post,
   Body,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ReqUser } from '../user/user.decorator';
@@ -16,6 +17,7 @@ import { AddCartProductDto } from './dto/cart-products.add.dto';
 import { FindOneParams } from '../../services/database/database.params';
 import { ProductService } from '../product/product.service';
 import { Product } from '../product/interfaces/product.interface';
+import { RemoveCartProductsParams } from './params/cart-products.remove.params';
 
 @UseGuards(AuthGuard())
 @Controller('cart')
@@ -65,6 +67,21 @@ export class CartController {
       cart,
       product,
       dto.quantity,
+    );
+
+    return { cart: newCart };
+  }
+
+  @Delete(':id/products/:productId')
+  async removeProductFromCart(
+    @Param() params: RemoveCartProductsParams,
+    @ReqUser() user: User,
+  ) {
+    const cart: Cart = await this.getCartForUser(params.id, user);
+
+    const newCart: Cart = await this.cartService.removeProductById(
+      cart,
+      params.productId,
     );
 
     return { cart: newCart };
