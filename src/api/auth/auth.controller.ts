@@ -14,10 +14,10 @@ export class AuthController {
       throw new ForbiddenException('User does not exist.');
     }
 
-    const jwt = await this.authService.login(user);
+    const accessToken: string = await this.authService.login(user);
 
     return {
-      accessToken: jwt,
+      accessToken,
     };
   }
 }
