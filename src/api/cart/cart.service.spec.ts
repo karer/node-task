@@ -19,10 +19,13 @@ const mockCarts: Cart[] = [
 ] as any;
 
 const mockProduct: Product = {
-  _id: 'item1',
+  _id: '5e8cc2d61dacc56e21770f6d',
   name: 'sample product',
   price: { amount: 9, currency: 'usd' },
   quantity: 5,
+  equals(newId: string) {
+    return this._id === newId;
+  },
 } as any;
 
 const mockNewCart: Cart = {
@@ -164,7 +167,11 @@ describe('CartService', () => {
     expect(cart.content).toHaveLength(1);
     await service.addProduct(cart, mockProduct, 2);
     expect(cart.content).toHaveLength(1);
-    await service.addProduct(cart, { ...mockProduct, _id: 'new-id' } as any, 2);
+    await service.addProduct(
+      cart,
+      { ...mockProduct, _id: '0e8cc2d61dacc56e21770f6d' } as any,
+      2,
+    );
     expect(cart.content).toHaveLength(2);
   });
 

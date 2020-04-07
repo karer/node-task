@@ -6,6 +6,7 @@ import { User } from '../user/interfaces/user.interface';
 import { CartEntry } from './interfaces/cart-entry.interface';
 import { Product } from '../product/interfaces/product.interface';
 import { CurrencyService } from '../../services/currency/currency.service';
+import { ObjectID } from 'mongodb';
 
 @Injectable()
 export class CartService {
@@ -56,7 +57,7 @@ export class CartService {
       entry.quantity += quantity;
     } else {
       entry = new this.cartEntryModel({
-        product: product._id,
+        product: new ObjectID(product._id),
         quantity,
       });
 
