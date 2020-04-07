@@ -1,75 +1,160 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Node Task
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![license](https://img.shields.io/github/license/mashape/apistatus.svg)
 
-## Description
+🛍 Simple Node.js shop API with multicurrency support written in [NestJS](https://github.com/nestjs/nest).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+📦 Out-of-box web UI client is ready for testing endpoints. Jump to [#Usage](#usage) section.
 
-## Installation
+## Features
+
+- JWT auth system with mocked user (id 1)
+- Displaying products (using docker-compose, there are 3 by default)
+- Creating cart
+- Adding and removing products to cart
+- Checkout with specified currency calculation
+
+## Requirements
+
+- Node 8+
+- MongoDB
+- Docker _(optional)_
+- Docker-compose _(optional)_
+
+## Installlation
 
 ```bash
-$ npm install
+cp .env.example .env
+
+npm i
 ```
 
-## Running the app
+## Running
+
+### Locally
+
+1. Use default .env configuration.
+2. Start the suite
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose up -d
+npm run start:dev
 ```
 
-## Test
+3. App should be available on [http://localhost:3000](http://localhost:3000)
+
+### Production
+
+Build and use app:
+
+- standalone
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run build
+npm run start:prod
 ```
 
-## Support
+- via Docker
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+docker build -f .docker/app/Dockerfile -t node-task .
+docker run node-task
+```
 
-## Stay in touch
+## Testing
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Source code is covered by unit and e2e tests.
+
+```bash
+npm run test        # unit
+npm run test:e2e    # e2e
+```
+
+## Documentation
+
+Documentation is available on [http://localhost:3000/docs](http://localhost:3000/docs) after running locally. It uses Swagger with exposed interactive UI.
+
+## Usage
+
+Project provides easy and neat way to use it's endpoints. This step-by-step demonstrates the whole shopping flow.
+
+1. Install and setup local environment ([x](x), [x](x))
+2. Enter Swagger UI documentation - [http://localhost:3000/docs](http://localhost:3000/docs). Collapse endpoint and use "Try it out" button to prepare requests.
+3. Authenticate as mocked user
+
+```json
+POST /auth
+
+Body:
+{
+    "userId": "1"
+}
+```
+
+4. Grab accessToken and set it via "Authorize" button on top-right corner of the page. Now you can use authenticated routes.
+5. List available products
+
+```json
+GET /product
+
+Response:
+{
+  "products": [
+    {
+      "_id": "5e8cc2d61dacc56e21770f6d"
+      ...
+```
+
+6. Take `_id` of one of products and create a cart
+
+```json
+POST /cart
+
+Response:
+{
+  "cart": {
+    "_id": "5e8d02e2f7ae65060120d6e1"
+    ...
+```
+
+7. Now, take `_id` of cart and select product to it
+
+```json
+POST /cart/{id}/products
+
+Params:
+id = 5e8cc2d61dacc56e21770f6d
+
+Body:
+{
+    "productId": "5e8cc2d61dacc56e21770f6d",
+    "quantity": 1
+}
+```
+
+8. Cart is finally ready to checkout with specified currency
+
+```json
+POST /checkout/{cartId}
+
+Params:
+cartId = 5e8cc2d61dacc56e21770f6d
+
+Body:
+{
+    "currency": "USD"
+}
+```
+
+9. Calculated cart price in specified currency is available in response.
+
+## Logs
+
+[winston](https://github.com/winstonjs/winston) is used for logging through two transport layers:
+
+- console (Nest-like)
+- file (to `logs/` directory)
 
 ## License
 
-  Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Project is MIT-licensed. Feel free to use it and modify just the way you want.
