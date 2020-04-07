@@ -28,6 +28,7 @@
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.7",
     "@nestjs/schedule": "^0.3.0",
+    "@nestjs/swagger": "^4.5.1",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.1",
     "mongoose": "^5.9.7",
@@ -38,7 +39,8 @@
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.1.2",

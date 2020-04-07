@@ -15,7 +15,10 @@ import { FindOneCartParams } from '../cart/params/cart.find.params';
 import { CheckoutService } from './checkout.service';
 import { Checkout } from './interfaces/checkout.interface';
 import { CreateCheckoutDto } from './dto/checkout.create.dto';
+import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('checkout')
+@ApiBearerAuth()
 @UseGuards(AuthGuard())
 @Controller('checkout')
 export class CheckoutController {
@@ -24,6 +27,10 @@ export class CheckoutController {
     private readonly cartService: CartService,
   ) {}
 
+  @ApiResponse({
+    status: 201,
+    description: 'Created checkout for specified cart.',
+  })
   @Post(':cartId')
   async createCheckout(
     @Param() cartParams: FindOneCartParams,

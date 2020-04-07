@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { CurrencyService } from './services/currency/currency.service';
 import { useContainer } from 'class-validator';
@@ -24,6 +25,16 @@ async function bootstrap() {
 
   const configService: ConfigService = app.get(ConfigService);
   const port: number = configService.get('app.port');
+
+  const options = new DocumentBuilder()
+    .setTitle('Node Task')
+    .setDescription('Simple shop API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(port, () => {
     logger.log(`* Listening on ::${port}`);

@@ -18,7 +18,10 @@ import { FindOneParams } from '../../services/database/database.params';
 import { ProductService } from '../product/product.service';
 import { Product } from '../product/interfaces/product.interface';
 import { FindOneProductParams } from '../product/params/product.find.params';
+import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('cart')
+@ApiBearerAuth()
 @UseGuards(AuthGuard())
 @Controller('cart')
 export class CartController {
@@ -27,6 +30,7 @@ export class CartController {
     private readonly productService: ProductService,
   ) {}
 
+  @ApiResponse({ status: 200, description: 'Retrieved carts of user.' })
   @Get()
   async getCarts(@ReqUser() user: User) {
     const carts: Cart[] = await this.getCartsForUser(user);
@@ -34,6 +38,10 @@ export class CartController {
     return { carts };
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieved specified cart of user.',
+  })
   @Get(':id')
   async getCart(@Param() params: FindOneParams, @ReqUser() user: User) {
     const cart: Cart = await this.getCartForUser(params.id, user);
@@ -41,6 +49,7 @@ export class CartController {
     return { cart };
   }
 
+  @ApiResponse({ status: 201, description: 'Created a cart for user.' })
   @Post()
   async createCart(@ReqUser() user: User) {
     const cart: Cart = await this.cartService.createForUser(user);
@@ -48,6 +57,7 @@ export class CartController {
     return { cart };
   }
 
+  @ApiResponse({ status: 201, description: 'Added product to cart.' })
   @Post(':id/products')
   async addProductToCart(
     @Param() params: FindOneParams,
@@ -72,6 +82,7 @@ export class CartController {
     return { cart: newCart };
   }
 
+  @ApiResponse({ status: 200, description: 'Removed product from cart.' })
   @Delete(':id/products/:productId')
   async removeProductFromCart(
     @Param() params: FindOneParams,
