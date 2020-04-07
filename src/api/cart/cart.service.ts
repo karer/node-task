@@ -48,28 +48,28 @@ export class CartService {
   }
 
   async addProduct(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
-    if (quantity > product.quantity) {
+    let entry = cart.content.find(
+      (entry: CartEntry) => entry.product === product._id,
+    );
+
+    if (entry) {
+      entry.quantity += quantity;
+    } else {
+      entry = new this.cartEntryModel({
+        product: product._id,
+        quantity,
+      });
+
+      cart.content.push(entry);
+    }
+
+    if (entry.quantity > product.quantity) {
       throw new BadRequestException(
         'That quantity of this product is out of stock.',
       );
     }
 
-    const existingEntry = cart.content.find(
-      (entry: CartEntry) => entry.product === product._id,
-    );
-
-    if (existingEntry) {
-      existingEntry.quantity += quantity;
-
-      cart.markModified('content');
-    } else {
-      const cartEntry: CartEntry = new this.cartEntryModel({
-        product: product._id,
-        quantity,
-      });
-
-      cart.content.push(cartEntry);
-    }
+    cart.markModified('content');
 
     await cart.save();
 
