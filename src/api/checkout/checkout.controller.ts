@@ -1,14 +1,12 @@
 import {
   Controller,
   UseGuards,
-  Get,
   Param,
   NotFoundException,
   Post,
   Body,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FindOneParams } from '../../services/database/database.params';
 import { ReqUser } from '../user/user.decorator';
 import { User } from '../user/interfaces/user.interface';
 import { Cart } from '../cart/interfaces/cart.interface';
