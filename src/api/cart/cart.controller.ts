@@ -63,7 +63,7 @@ export class CartController {
       throw new NotFoundException('Product not found.');
     }
 
-    const newCart: Cart = await this.cartService.addProducts(
+    const newCart: Cart = await this.cartService.addProduct(
       cart,
       product,
       dto.quantity,

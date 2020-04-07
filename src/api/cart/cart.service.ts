@@ -45,7 +45,7 @@ export class CartService {
     return this.create({ ...fields, userId: user.id });
   }
 
-  async addProducts(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
+  async addProduct(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
     const existingEntry = cart.content.find(
       (entry: CartEntry) => entry.product === product._id,
     );
