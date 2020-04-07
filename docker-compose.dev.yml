@@ -6,13 +6,13 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./docker/mongo/001_products.js:/docker-entrypoint-initdb.d/001_products.js:ro
+      - ./.docker/mongo/001_products.js:/docker-entrypoint-initdb.d/001_products.js:ro
       - mongo-data:/data/db
       - mongo-config:/data/configdb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: node-task
-      MONGO_INITDB_ROOT_PASSWORD: node-task
-      MONGO_INITDB_DATABASE: node-task
+      MONGO_INITDB_ROOT_USERNAME: nodetask
+      MONGO_INITDB_ROOT_PASSWORD: nodetask
+      MONGO_INITDB_DATABASE: nodetask
     restart: unless-stopped
 
 volumes:
