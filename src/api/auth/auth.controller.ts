@@ -1,13 +1,14 @@
 import { Controller, Post, ForbiddenException, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '../user/interfaces/user.interface';
+import { AuthLoginDto } from './dto/auth.login.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  async login(@Body() dto: any) {
+  async login(@Body() dto: AuthLoginDto) {
     const user: User = await this.authService.validateUser(dto.userId);
 
     if (!user) {
