@@ -9,10 +9,11 @@
 ## Features
 
 - JWT auth system with mocked user (id 1)
-- Displaying products (using docker-compose, there are 3 by default)
+- Displaying products _(using docker-compose, there are 3 by default)_
 - Creating cart
 - Adding and removing products to cart
 - Checkout with specified currency calculation
+- Automatic currency refreshment via [exchangeratesapi.io](https://api.exchangeratesapi.io/latest)
 
 ## Requirements
 
