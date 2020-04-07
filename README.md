@@ -118,7 +118,7 @@ Response:
     ...
 ```
 
-7. Now, take `_id` of cart and select product to it
+7. Now, take `_id` of cart and add product into it
 
 ```
 POST /cart/{id}/products
