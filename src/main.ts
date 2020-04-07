@@ -1,14 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import {
+  utilities as nestWinstonModuleUtilities,
+  WinstonModule,
+} from 'nest-winston';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { CurrencyService } from './services/currency/currency.service';
 import { useContainer } from 'class-validator';
+import * as winston from 'winston';
 
 async function bootstrap() {
   const logger: Logger = new Logger('App');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestWinstonModuleUtilities.format.nestLike(),
+          ),
+        }),
+        new winston.transports.File({
+          dirname: 'logs',
+        }),
+      ],
+    }),
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
