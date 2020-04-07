@@ -6,6 +6,7 @@ import { Cart } from './interfaces/cart.interface';
 import { User } from '../user/interfaces/user.interface';
 import { Product } from '../product/interfaces/product.interface';
 import { CartEntry } from './interfaces/cart-entry.interface';
+import { BadRequestException } from '@nestjs/common';
 
 const mockUser: User = {
   id: '1',
@@ -21,6 +22,7 @@ const mockProduct: Product = {
   _id: 'item1',
   name: 'sample product',
   price: { amount: 9, currency: 'usd' },
+  quantity: 5,
 } as any;
 
 const mockNewCart: Cart = {
@@ -164,6 +166,14 @@ describe('CartService', () => {
     expect(cart.content).toHaveLength(1);
     await service.addProduct(cart, { ...mockProduct, _id: 'new-id' } as any, 2);
     expect(cart.content).toHaveLength(2);
+  });
+
+  it('should not add out-of-stock product to cart', async () => {
+    const cart: Cart = { ...mockNewCart } as any;
+
+    expect(
+      service.addProduct(cart, mockProduct, mockProduct.quantity + 1),
+    ).rejects.toThrowError(BadRequestException);
   });
 
   it('should remove product from cart', async () => {
