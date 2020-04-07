@@ -48,8 +48,8 @@ export class CartService {
   }
 
   async addProduct(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
-    let entry = cart.content.find(
-      (entry: CartEntry) => entry.product === product._id,
+    let entry = cart.content.find((entry: CartEntry) =>
+      entry.product.equals(product._id),
     );
 
     if (entry) {
@@ -80,6 +80,7 @@ export class CartService {
     cart.content = cart.content.filter(
       (entry: CartEntry) => entry.product.toString() !== productId,
     );
+
     cart.markModified('content');
 
     await cart.save();
