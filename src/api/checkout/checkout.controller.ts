@@ -34,8 +34,6 @@ export class CheckoutController {
   ) {
     const cart: Cart = await this.getCartForUser(cartParams.cartId, user);
 
-    // TODO: Validaton for currency dto
-
     const checkout: Checkout = this.checkoutService.checkout(
       cart,
       dto.currency,
