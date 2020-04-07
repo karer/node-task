@@ -5,12 +5,14 @@ import { Cart } from './interfaces/cart.interface';
 import { User } from '../user/interfaces/user.interface';
 import { CartEntry } from './interfaces/cart-entry.interface';
 import { Product } from '../product/interfaces/product.interface';
+import { CurrencyService } from '../../services/currency/currency.service';
 
 @Injectable()
 export class CartService {
   constructor(
     @InjectModel('Cart') private readonly cartModel: Model<Cart>,
     @InjectModel('CartEntry') private readonly cartEntryModel: Model<CartEntry>,
+    private readonly currencyService: CurrencyService,
   ) {}
 
   find(conditions: FilterQuery<Cart> = {}): Promise<Cart[]> {
@@ -77,5 +79,20 @@ export class CartService {
     await cart.save();
 
     return cart;
+  }
+
+  getTotalPrice(cart: Cart, currency: string): number {
+    return cart.content.reduce((prev: number, cartEntry: CartEntry) => {
+      const product: Product = cartEntry.product as Product;
+
+      const entryPrice: number =
+        this.currencyService.recalculateValue(
+          product.price.amount,
+          product.price.currency,
+          currency,
+        ) * cartEntry.quantity;
+
+      return prev + entryPrice;
+    }, 0);
   }
 }
