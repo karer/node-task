@@ -9,8 +9,7 @@ import { CurrencyService } from './currency.service';
 
 @ValidatorConstraint({ name: 'isManagedCurrency', async: true })
 @Injectable()
-export class IsManagedCurrenccyConstraint
-  implements ValidatorConstraintInterface {
+class IsManagedCurrencyConstraint implements ValidatorConstraintInterface {
   constructor(private readonly currencyService: CurrencyService) {}
 
   validate(value: string): boolean {
@@ -30,7 +29,7 @@ export const IsManagedCurrency = (validationOptions?: ValidationOptions) => (
   registerDecorator({
     target: object.constructor,
     propertyName,
-    validator: IsManagedCurrenccyConstraint,
+    validator: IsManagedCurrencyConstraint,
     options: validationOptions,
   });
 };
