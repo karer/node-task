@@ -17,7 +17,7 @@ import { AddCartProductDto } from './dto/cart-products.add.dto';
 import { FindOneParams } from '../../services/database/database.params';
 import { ProductService } from '../product/product.service';
 import { Product } from '../product/interfaces/product.interface';
-import { RemoveCartProductsParams } from './params/cart-products.remove.params';
+import { FindOneProductParams } from '../product/params/product.find.params';
 
 @UseGuards(AuthGuard())
 @Controller('cart')
@@ -74,14 +74,15 @@ export class CartController {
 
   @Delete(':id/products/:productId')
   async removeProductFromCart(
-    @Param() params: RemoveCartProductsParams,
+    @Param() params: FindOneParams,
+    @Param() productParams: FindOneProductParams,
     @ReqUser() user: User,
   ) {
     const cart: Cart = await this.getCartForUser(params.id, user);
 
     const newCart: Cart = await this.cartService.removeProductById(
       cart,
-      params.productId,
+      productParams.productId,
     );
 
     return { cart: newCart };
