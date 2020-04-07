@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery } from 'mongoose';
 import { Cart } from './interfaces/cart.interface';
@@ -48,6 +48,12 @@ export class CartService {
   }
 
   async addProduct(cart: Cart, product: Product, quantity = 1): Promise<Cart> {
+    if (quantity > product.quantity) {
+      throw new BadRequestException(
+        'That quantity of this product is out of stock.',
+      );
+    }
+
     const existingEntry = cart.content.find(
       (entry: CartEntry) => entry.product === product._id,
     );
