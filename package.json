@@ -1,9 +1,10 @@
 {
-  "name": "nest-typescript-starter",
+  "name": "node-task",
   "private": true,
   "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
+  "description": "Simple Node.js shop API with multicurrency support written in NestJS.",
   "license": "MIT",
+  "author": "Kacper Geisheimer <devkarer@gmail.com>",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
