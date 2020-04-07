@@ -79,11 +79,11 @@ Documentation is available on [http://localhost:3000/docs](http://localhost:3000
 
 Project provides easy and neat way to use it's endpoints. This step-by-step demonstrates the whole shopping flow.
 
-1. Install and setup local environment ([x](x), [x](x))
+1. Install and setup local environment ([#installlation](#installlation), [#locally](#locally))
 2. Enter Swagger UI documentation - [http://localhost:3000/docs](http://localhost:3000/docs). Collapse endpoint and use "Try it out" button to prepare requests.
 3. Authenticate as mocked user
 
-```json
+```
 POST /auth
 
 Body:
@@ -95,7 +95,7 @@ Body:
 4. Grab accessToken and set it via "Authorize" button on top-right corner of the page. Now you can use authenticated routes.
 5. List available products
 
-```json
+```
 GET /product
 
 Response:
@@ -108,7 +108,7 @@ Response:
 
 6. Take `_id` of one of products and create a cart
 
-```json
+```
 POST /cart
 
 Response:
@@ -120,7 +120,7 @@ Response:
 
 7. Now, take `_id` of cart and select product to it
 
-```json
+```
 POST /cart/{id}/products
 
 Params:
@@ -135,7 +135,7 @@ Body:
 
 8. Cart is finally ready to checkout with specified currency
 
-```json
+```
 POST /checkout/{cartId}
 
 Params:
