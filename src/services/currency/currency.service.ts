@@ -3,12 +3,10 @@ import * as request from 'request-promise-native';
 import { CURRENCY_API_URL } from './currency.constants';
 import { Currencies } from './types/currencies.type';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { UserModule } from '../../api/user/user.module';
 
 @Injectable()
 export class CurrencyService {
   private readonly logger: Logger = new Logger(CurrencyService.name);
-  private baseCurrency: string;
   private currencies: Currencies;
 
   @Cron(CronExpression.EVERY_HOUR)
@@ -19,8 +17,7 @@ export class CurrencyService {
       throw new Error('Cannot load currency rates!');
     }
 
-    this.baseCurrency = data.base;
-    this.currencies = data.rates;
+    this.currencies = { [data.base]: 1, ...data.rates };
 
     this.logger.log(
       `Loaded ${Object.keys(this.currencies).length} currencies.`,
@@ -40,6 +37,8 @@ export class CurrencyService {
     oldCurrency: string,
     newCurrency: string,
   ): number {
-    return (value / this.getValue(oldCurrency)) * this.getValue(newCurrency);
+    return oldCurrency !== newCurrency
+      ? (value / this.getValue(oldCurrency)) * this.getValue(newCurrency)
+      : value;
   }
 }

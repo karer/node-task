@@ -89,9 +89,7 @@ export class CartController {
   }
 
   private async getCartsForUser(user: User): Promise<Cart[]> {
-    const carts: Cart[] = await this.cartService.findForUser(user, {
-      fields: '_id',
-    });
+    const carts: Cart[] = await this.cartService.findForUser(user);
 
     return carts;
   }

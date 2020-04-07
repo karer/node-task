@@ -7,8 +7,11 @@ import { Checkout } from './interfaces/checkout.interface';
 export class CheckoutService {
   constructor(private readonly cartService: CartService) {}
 
-  checkout(cart: Cart, currency: string): Checkout {
-    const totalPrice: number = this.cartService.getTotalPrice(cart, currency);
+  async checkout(cart: Cart, currency: string): Promise<Checkout> {
+    const totalPrice: number = await this.cartService.getTotalPrice(
+      cart,
+      currency,
+    );
 
     return {
       price: {

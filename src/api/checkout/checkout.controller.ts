@@ -24,7 +24,7 @@ export class CheckoutController {
     private readonly cartService: CartService,
   ) {}
 
-  @Post('checkout/:cartId')
+  @Post(':cartId')
   async createCheckout(
     @Param() cartParams: FindOneCartParams,
     @Body() dto: CreateCheckoutDto,
@@ -32,7 +32,7 @@ export class CheckoutController {
   ) {
     const cart: Cart = await this.getCartForUser(cartParams.cartId, user);
 
-    const checkout: Checkout = this.checkoutService.checkout(
+    const checkout: Checkout = await this.checkoutService.checkout(
       cart,
       dto.currency,
     );

@@ -9,7 +9,8 @@ import { CurrencyService } from './currency.service';
 
 @ValidatorConstraint({ name: 'isManagedCurrency', async: true })
 @Injectable()
-class IsManagedCurrencyConstraint implements ValidatorConstraintInterface {
+export class IsManagedCurrencyConstraint
+  implements ValidatorConstraintInterface {
   constructor(private readonly currencyService: CurrencyService) {}
 
   validate(value: string): boolean {

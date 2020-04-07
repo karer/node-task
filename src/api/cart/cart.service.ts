@@ -78,7 +78,7 @@ export class CartService {
 
   async removeProductById(cart: Cart, productId: string): Promise<Cart> {
     cart.content = cart.content.filter(
-      (entry: CartEntry) => entry.product !== productId,
+      (entry: CartEntry) => entry.product.toString() !== productId,
     );
     cart.markModified('content');
 
@@ -87,18 +87,24 @@ export class CartService {
     return cart;
   }
 
-  getTotalPrice(cart: Cart, currency: string): number {
-    return cart.content.reduce((prev: number, cartEntry: CartEntry) => {
-      const product: Product = cartEntry.product as Product;
+  async getTotalPrice(cart: Cart, currency: string): Promise<number> {
+    await cart.populate('content.product').execPopulate();
 
-      const entryPrice: number =
-        this.currencyService.recalculateValue(
-          product.price.amount,
-          product.price.currency,
-          currency,
-        ) * cartEntry.quantity;
+    return parseFloat(
+      cart.content
+        .reduce((prev: number, cartEntry: CartEntry) => {
+          const product: Product = cartEntry.product as Product;
 
-      return prev + entryPrice;
-    }, 0);
+          const entryPrice: number =
+            this.currencyService.recalculateValue(
+              product.price.amount,
+              product.price.currency,
+              currency,
+            ) * cartEntry.quantity;
+
+          return prev + entryPrice;
+        }, 0)
+        .toFixed(2),
+    );
   }
 }
