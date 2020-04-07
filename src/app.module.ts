@@ -8,7 +8,7 @@ import { CartModule } from './api/cart/cart.module';
 import { DatabaseModule } from './services/database/database.module';
 import { ProductModule } from './api/product/product.module';
 import { CurrencyModule } from './services/currency/currency.module';
-import { OrderModule } from './api/order/order.module';
+import { CheckoutModule } from './api/checkout/checkout.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { OrderModule } from './api/order/order.module';
     CartModule,
     ProductModule,
     CurrencyModule,
-    OrderModule,
+    CheckoutModule,
   ],
 })
 export class AppModule {}
