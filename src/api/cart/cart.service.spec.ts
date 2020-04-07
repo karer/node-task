@@ -32,6 +32,13 @@ const mockNewCart: Cart = {
   markModified: async () => {
     return;
   },
+  populate: () => {
+    return {
+      async execPopulate() {
+        return;
+      },
+    };
+  },
 } as any;
 
 const mockNewCartEntry: CartEntry = {} as any;
@@ -179,7 +186,9 @@ describe('CartService', () => {
       ],
     } as any;
 
-    expect(service.getTotalPrice(cart, 'eur')).toBe(9 * 1 + 9 * 2);
-    expect(service.getTotalPrice(cart, 'usd')).toBe((9 * 1 + 9 * 2) / 1.5);
+    expect(await service.getTotalPrice(cart, 'eur')).toBe(9 * 1 + 9 * 2);
+    expect(await service.getTotalPrice(cart, 'usd')).toBe(
+      (9 * 1 + 9 * 2) / 1.5,
+    );
   });
 });

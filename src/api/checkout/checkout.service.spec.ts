@@ -29,8 +29,8 @@ describe('CheckoutService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create checkout', () => {
-    expect(service.checkout(mockCart, 'usd')).toMatchObject({
+  it('should create checkout', async () => {
+    expect(await service.checkout(mockCart, 'usd')).toMatchObject({
       price: {
         amount: 200,
         currency: 'usd',
